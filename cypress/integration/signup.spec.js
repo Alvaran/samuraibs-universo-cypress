@@ -6,23 +6,23 @@ import signupPages from '../support/pages/signup'
 
 describe('cadastro', () => {
 
-    context('quando o usuario é novato', () => {
-        const user = {
-            name: 'André Luizs',
-            email: 'andreteste@teste.com',
-            password: '123456'
-        }
+    before(function() {
+        cy.fixture('andre').then(function(andre) {
+            this.andre = andre
+        })
+    })
 
-        before(() => {
-            cy.task('removeUser', user.email)
-                .then(function (result) {
+    context.only('quando o usuario é novato', function() {
+        before(function() {
+            cy.task('removeUser', this.andre.email)
+                .then(function(result) {
                     console.log(result)
                 })
-        });
+        })
 
-        it('deve cadastrar com sucesso', () => {
+        it('deve cadastrar com sucesso', function() {
             signupPages.go()
-            signupPages.form(user)
+            signupPages.form(this.andre)
             signupPages.submit()
             signupPages.toast.shouldHaveText('Agora você se tornou um(a) Samurai, faça seu login para ver seus agendamentos!')
         });
