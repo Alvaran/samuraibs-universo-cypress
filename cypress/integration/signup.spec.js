@@ -6,77 +6,70 @@ import signupPages from '../support/pages/signup'
 
 describe('cadastro', () => {
 
-    before(function() {
-        cy.fixture('andre').then(function(andre) {
-            this.andre = andre
+    before(function () {
+        cy.fixture('signup').then(function (signup) {
+            this.success = signup.success
+            this.email_dup = signup.email_dup
+            this.email_inv = signup.email_inv
+            this.short_password = signup.short_password
         })
     })
 
-    context.only('quando o usuario é novato', function() {
-        before(function() {
-            cy.task('removeUser', this.andre.email)
-                .then(function(result) {
+    context('quando o usuario é novato', function () {
+        before(function () {
+            cy.task('removeUser', this.success.email)
+                .then(function (result) {
                     console.log(result)
                 })
         })
 
-        it('deve cadastrar com sucesso', function() {
+        it('deve cadastrar com sucesso', function () {
             signupPages.go()
-            signupPages.form(this.andre)
+            signupPages.form(this.success)
             signupPages.submit()
             signupPages.toast.shouldHaveText('Agora você se tornou um(a) Samurai, faça seu login para ver seus agendamentos!')
         });
     });
 
-    context('quando o email já existe', () => {
-        const user = {
-            name: 'Pedro Luiz',
-            email: 'pedro@teste.com',
-            password: '123456',
-            is_provider: true
-        }
+    context('quando o email já existe', function () {
 
-        before(() => {
-            cy.postUser(user)
+
+        before(function () {
+            cy.postUser(this.email_dup)
         });
-        it('deve exibir e-mail já cadastrado', () => {
+        it('deve exibir e-mail já cadastrado', function () {
             signupPages.go()
-            signupPages.form(user)
+            signupPages.form(this.email_dup)
             signupPages.submit()
             signupPages.toast.shouldHaveText('Email já cadastrado para outro usuário.')
         });
     });
 
-    context('quando o email é inválido', () => {
-        const user = {
-            name: 'carlos bastos',
-            email: 'carlos.uol.com',
-            password: '123456',
-        }
+    context('quando o email é inválido', function () {
 
-        it('deve exibir mensagem de alerta', () => {
+        it('deve exibir mensagem de alerta', function () {
             signupPages.go()
-            signupPages.form(user)
+            signupPages.form(this.email_inv)
             signupPages.submit()
             signupPages.alert.haveText('Informe um email válido')
 
         });
     });
 
-    context('quando a senha é muito curta', () => {
+    context('quando a senha é muito curta', function () {
 
         const passwords = ['1', '2a', 'ab3', 'abc4', 'ab#c5']
 
-        beforeEach(() => {
+        beforeEach(function () {
             signupPages.go()
         });
 
         passwords.forEach(function (p) {
-            it('não deve cadastrar com a senha: ' + p, () => {
+            it('não deve cadastrar com a senha: ' + p, function () {
 
-                const user = { name: 'Tereza bastoss', email: 'aloisio@hotmail.com', password: p }
+                this.short_password.password = p
 
-                signupPages.form(user)
+                signupPages.form(this.short_password)
                 signupPages.submit()
             })
         })
@@ -86,7 +79,7 @@ describe('cadastro', () => {
         })
     })
 
-    context('quando não preencho nenhum dos campos ', () => {
+    context('quando não preencho nenhum dos campos ', function () {
 
         const alertMessages = [
             'Nome é obrigatório',
@@ -99,7 +92,7 @@ describe('cadastro', () => {
             signupPages.submit()
         })
         alertMessages.forEach(function (alert) {
-            it('deve exibir ' + alert.toLowerCase(),function() {
+            it('deve exibir ' + alert.toLowerCase(), function () {
                 signupPages.alert.haveText(alert)
             });
 
