@@ -1,0 +1,23 @@
+{
+  "success": {
+    "name": "André Luizs",
+    "email": "andreteste@teste.com",
+    "password": "123456"
+  },
+  "email_dup": {
+    "name": "Pedro Luiz",
+    "email": "pedro@teste.com",
+    "password": "123456",
+    "is_provider": true
+  },
+  "email_inv": {
+    "name": "carlos bastos",
+    "email": "carlos.uol.com",
+    "password": "123456"
+  },
+  "short_password":{
+    "name": "Tereza bastoss",
+    "email": "aloisio@hotmail.com",
+    "password": null
+  }
+}
