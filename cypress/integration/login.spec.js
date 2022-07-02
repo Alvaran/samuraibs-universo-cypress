@@ -70,7 +70,7 @@ describe('login', () => {
 
                 loginPage.form(user)
                 loginPage.submit()
-                loginPage.alertHaveText('Informe um email válido')
+                loginPage.alert.haveText('Informe um email válido')
 
             });
         })
@@ -91,7 +91,7 @@ describe('login', () => {
         })
         alertMessages.forEach(function (alert) {
             it('deve exibir ' + alert.toLowerCase(), function () {
-                loginPage.alertHaveText(alert)
+                loginPage.alert.haveText(alert)
             });
         })
     });
